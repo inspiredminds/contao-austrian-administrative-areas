@@ -3,14 +3,14 @@
 declare(strict_types=1);
 
 /*
- * This file is part of the ContaoAustrianAdminstrativeAreasBundle.
+ * This file is part of the ContaoAustrianAdministrativeAreasBundle.
  *
  * (c) inspiredminds
  *
  * @license LGPL-3.0-or-later
  */
 
-namespace InspiredMinds\ContaoAustrianAdminstrativeAreasBundle;
+namespace InspiredMinds\ContaoAustrianAdministrativeAreasBundle;
 
 use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\ManagerPlugin\Bundle\BundlePluginInterface;
@@ -28,7 +28,7 @@ class ContaoManagerPlugin implements BundlePluginInterface
     public function getBundles(ParserInterface $parser)
     {
         return [
-            BundleConfig::create(ContaoAustrianAdminstrativeAreasBundle::class)
+            BundleConfig::create(ContaoAustrianAdministrativeAreasBundle::class)
                 ->setLoadAfter([ContaoCoreBundle::class]),
         ];
     }

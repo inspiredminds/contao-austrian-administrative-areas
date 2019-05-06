@@ -1,7 +1,7 @@
 <?php
 
 $header = <<<EOF
-This file is part of the ContaoAustrianAdminstrativeAreasBundle.
+This file is part of the ContaoAustrianAdministrativeAreasBundle.
 
 (c) inspiredminds
 

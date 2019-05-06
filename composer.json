@@ -29,10 +29,10 @@
     },
     "autoload": {
         "psr-4": {
-            "InspiredMinds\\ContaoAustrianAdminstrativeAreasBundle\\": "src/"
+            "InspiredMinds\\ContaoAustrianAdministrativeAreasBundle\\": "src/"
         }
     },
     "extra": {
-        "contao-manager-plugin": "InspiredMinds\\ContaoAustrianAdminstrativeAreasBundle\\ContaoManagerPlugin"
+        "contao-manager-plugin": "InspiredMinds\\ContaoAustrianAdministrativeAreasBundle\\ContaoManagerPlugin"
     }
 }

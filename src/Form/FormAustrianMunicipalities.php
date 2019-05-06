@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /*
- * This file is part of the ContaoAustrianAdminstrativeAreasBundle.
+ * This file is part of the ContaoAustrianAdministrativeAreasBundle.
  *
  * (c) inspiredminds
  *
