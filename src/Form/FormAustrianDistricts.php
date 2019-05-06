@@ -12,8 +12,9 @@ declare(strict_types=1);
 
 namespace InspiredMinds\ContaoAustrianAdministrativeAreasBundle\Form;
 
-use Contao\FormSelectMenu;
+use Contao\System;
 use Contao\StringUtil;
+use Contao\FormSelectMenu;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 
 class FormAustrianDistricts extends FormSelectMenu
@@ -26,7 +27,8 @@ class FormAustrianDistricts extends FormSelectMenu
     {
         parent::__construct($arrAttributes);
 
-        $this->cache = new FilesystemAdapter();
+        $cacheDir = System::getContainer()->getParameter('kernel.cache_dir') . '/contao';
+        $this->cache = new FilesystemAdapter('', 0, $cacheDir);
 
         // Include empty value
         $this->arrOptions[] = [['value' => '', 'label' => '']];
@@ -36,6 +38,7 @@ class FormAustrianDistricts extends FormSelectMenu
             $this->arrOptions[] = [
                 'group' => true,
                 'label' => $country,
+                'value' => '',
             ];
 
             foreach ($districts as $district) {
@@ -113,6 +116,7 @@ class FormAustrianDistricts extends FormSelectMenu
 
         $cacheItem->set($districts);
         $cacheItem->expiresAfter(365 * 24 * 60 * 60);
+        $this->cache->save($cacheItem);
 
         // return the result
         return $districts;
