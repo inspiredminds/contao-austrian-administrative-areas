@@ -12,9 +12,9 @@ declare(strict_types=1);
 
 namespace InspiredMinds\ContaoAustrianAdministrativeAreasBundle\Form;
 
-use Contao\System;
-use Contao\StringUtil;
 use Contao\FormSelectMenu;
+use Contao\StringUtil;
+use Contao\System;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 
 class FormAustrianDistricts extends FormSelectMenu
@@ -27,7 +27,7 @@ class FormAustrianDistricts extends FormSelectMenu
     {
         parent::__construct($arrAttributes);
 
-        $cacheDir = System::getContainer()->getParameter('kernel.cache_dir') . '/contao';
+        $cacheDir = System::getContainer()->getParameter('kernel.cache_dir').'/contao';
         $this->cache = new FilesystemAdapter('', 0, $cacheDir);
 
         // Include empty value

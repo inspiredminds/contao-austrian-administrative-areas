@@ -13,8 +13,8 @@ declare(strict_types=1);
 namespace InspiredMinds\ContaoAustrianAdministrativeAreasBundle\Form;
 
 use Contao\FormSelectMenu;
-use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Contao\System;
+use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 
 class FormAustrianMunicipalities extends FormSelectMenu
 {
@@ -26,19 +26,17 @@ class FormAustrianMunicipalities extends FormSelectMenu
     {
         parent::__construct($arrAttributes);
 
-        $cacheDir = System::getContainer()->getParameter('kernel.cache_dir') . '/contao';
+        $cacheDir = System::getContainer()->getParameter('kernel.cache_dir').'/contao';
         $this->cache = new FilesystemAdapter('', 0, $cacheDir);
 
         // Include empty value
         $this->arrOptions[] = [['value' => '', 'label' => '']];
 
-        // Get the municipalities
-        $municipalities = $this->getMunicipalities();
-
-        foreach ($municipalities as $municipality) {
+        // Fill options
+        foreach ($this->getMunicipalityOptions() as $value => $label) {
             $this->arrOptions[] = [
-                'value' => $municipality['name'],
-                'label' => $municipality['name'],
+                'value' => $value,
+                'label' => $label,
             ];
         }
     }
@@ -83,7 +81,7 @@ class FormAustrianMunicipalities extends FormSelectMenu
             $municipalities[] = [
                 'id' => $line[0],
                 'name' => $line[1],
-                'zipcode' => $line[4],
+                'postal' => $line[4],
             ];
         }
 
@@ -93,5 +91,45 @@ class FormAustrianMunicipalities extends FormSelectMenu
 
         // return the result
         return $municipalities;
+    }
+
+    /**
+     * Returns an associative options array, depending on the form field configuration.
+     */
+    protected function getMunicipalityOptions(): array
+    {
+        // Get the municipalities
+        $municipalities = $this->getMunicipalities();
+
+        // Create options
+        $options = [];
+
+        foreach ($municipalities as $municipality) {
+            // Default
+            $value = $municipality['name'];
+            $label = $municipality['name'];
+
+            switch ($this->austrianMunicipalitiesSaveMode) {
+                case 'id': $value = $municipality['id']; break;
+                case 'postal': $value = $municipality['postal']; break;
+            }
+
+            switch ($this->austrianMunicipalitiesDisplayMode) {
+                case 'name_id': $label = $municipality['name'].' ('.$municipality['id'].')'; break;
+                case 'name_postal': $label = $municipality['name'].' ('.$municipality['postal'].')'; break;
+                case 'id': $label = $municipality['id']; break;
+                case 'id_name': $label = $municipality['id'].' ('.$municipality['name'].')'; break;
+                case 'postal': $label = $municipality['postal']; break;
+                case 'postal_name': $label = $municipality['postal'].' ('.$municipality['name'].')'; break;
+            }
+
+            $options[$value] = $label;
+        }
+
+        // Sort the array
+        asort($options);
+
+        // Return the options
+        return $options;
     }
 }
