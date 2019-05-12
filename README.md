@@ -8,7 +8,7 @@ Contao extension to provide a form field for Austrian administrative areas.
 
 ## Austrian districts
 
-Provides a select field for all Austrian districts from the the following source: 
+Provides a select field for all Austrian districts from the the following source: https://www.statistik.at/verzeichnis/reglisten/polbezirke.csv
 
 ## Austrian municipalities
 
