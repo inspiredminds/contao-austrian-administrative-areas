@@ -2,14 +2,13 @@
 [![](https://img.shields.io/packagist/v/inspiredminds/contao-austrian-administrative-areas.svg)](https://packagist.org/packages/inspiredminds/contao-austrian-administrative-areas)
 [![](https://img.shields.io/packagist/dt/inspiredminds/contao-austrian-administrative-areas.svg)](https://packagist.org/packages/inspiredminds/contao-austrian-administrative-areas)
 
-Contao Austrian Administrative Areas
-=====================
+# Contao Austrian Administrative Areas ![](https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/whatsapp/186/flag-for-austria_1f1e6-1f1f9.png)
 
 Contao extension to provide a form field for Austrian administrative areas.
 
 ## Austrian districts
 
-Provides a select field for all Austrian districts from the the following source: https://www.statistik.at/verzeichnis/reglisten/polbezirke.csv
+Provides a select field for all Austrian districts from the the following source: 
 
 ## Austrian municipalities
 
