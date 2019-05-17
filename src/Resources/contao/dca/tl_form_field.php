@@ -30,5 +30,5 @@ $GLOBALS['TL_DCA']['tl_form_field']['fields']['austrianMunicipalitiesValue'] = [
     'sql' => "varchar(16) NOT NULL default 'name'",
 ];
 
-$GLOBALS['TL_DCA']['tl_form_field']['palettes']['austrian_districts'] = '{type_legend},type,name,label;{fconfig_legend},mandatory,multiple;{expert_legend:hide},class,accesskey,tabindex;{template_legend:hide},customTpl;{submit_legend},addSubmit';
-$GLOBALS['TL_DCA']['tl_form_field']['palettes']['austrian_municipalities'] = '{type_legend},type,name,label;{fconfig_legend},mandatory,multiple;{options_legend},austrianMunicipalitiesLabel,austrianMunicipalitiesValue;{expert_legend:hide},class,accesskey,tabindex;{template_legend:hide},customTpl;{submit_legend},addSubmit';
+$GLOBALS['TL_DCA']['tl_form_field']['palettes']['austrian_districts'] = '{type_legend},type,name,label;{fconfig_legend},mandatory,multiple;{expert_legend:hide},class,accesskey,tabindex;{template_legend:hide},customTpl;{invisible_legend:hide},invisible';
+$GLOBALS['TL_DCA']['tl_form_field']['palettes']['austrian_municipalities'] = '{type_legend},type,name,label;{fconfig_legend},mandatory,multiple;{options_legend},austrianMunicipalitiesLabel,austrianMunicipalitiesValue;{expert_legend:hide},class,accesskey,tabindex;{template_legend:hide},customTpl;{invisible_legend:hide},invisible';
