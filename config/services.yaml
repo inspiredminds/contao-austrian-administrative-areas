@@ -1,0 +1,18 @@
+services:
+    InspiredMinds\ContaoAustrianAdministrativeAreas\ContaoAustrianAdministrativeAreas:
+        public: true
+        arguments:
+            - '@inspiredminds.contao_austrian_administrative_areas.cache'
+            - '%env(AUSTRIAN_DISTRICT_CSV)%'
+            - '%env(AUSTRIAN_MUNICIPALITIES_CSV)%'
+
+    inspiredminds.contao_austrian_administrative_areas.cache:
+        class: Symfony\Component\Cache\Adapter\FilesystemAdapter
+        arguments:
+            - 'contao_austrian_administrative_areas'
+            - 31536000
+            - '%kernel.cache_dir%'
+
+parameters:
+    env(AUSTRIAN_DISTRICT_CSV): https://www.statistik.at/verzeichnis/reglisten/polbezirke.csv
+    env(AUSTRIAN_MUNICIPALITIES_CSV): https://www.statistik.at/verzeichnis/reglisten/gemliste_nam.csv

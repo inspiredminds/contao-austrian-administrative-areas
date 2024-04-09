@@ -3,31 +3,20 @@
 declare(strict_types=1);
 
 /*
- * This file is part of the ContaoAustrianAdministrativeAreasBundle.
- *
- * (c) inspiredminds
- *
- * @license LGPL-3.0-or-later
+ * (c) INSPIRED MINDS
  */
 
-namespace InspiredMinds\ContaoAustrianAdministrativeAreasBundle\Form;
+namespace InspiredMinds\ContaoAustrianAdministrativeAreas\Form;
 
 use Contao\FormSelectMenu;
 use Contao\System;
-use Symfony\Component\Cache\Adapter\FilesystemAdapter;
+use InspiredMinds\ContaoAustrianAdministrativeAreas\ContaoAustrianAdministrativeAreas;
 
 class FormAustrianMunicipalities extends FormSelectMenu
 {
-    protected const CACHE_NAME = 'contao.austrianmunicipalitiesform';
-
-    protected $cache;
-
     public function __construct($arrAttributes = null)
     {
         parent::__construct($arrAttributes);
-
-        $cacheDir = System::getContainer()->getParameter('kernel.cache_dir').'/contao';
-        $this->cache = new FilesystemAdapter('', 0, $cacheDir);
 
         // Include empty value
         $this->arrOptions[] = [['value' => '', 'label' => '']];
@@ -55,72 +44,41 @@ class FormAustrianMunicipalities extends FormSelectMenu
     }
 
     /**
-     * Returns the available municipalities as an array.
-     */
-    protected function getMunicipalities(): array
-    {
-        $cacheItem = $this->cache->getItem(self::CACHE_NAME);
-
-        if ($cacheItem->isHit()) {
-            return $cacheItem->get();
-        }
-
-        $municipalities = [];
-
-        // Load from server
-        $data = file('https://www.statistik.at/verzeichnis/reglisten/gemliste_nam.csv', FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
-
-        for ($i = 3; $i < \count($data) - 1; ++$i) {
-            // Get the line
-            $line = explode(';', utf8_encode($data[$i]));
-
-            if (empty($line)) {
-                continue;
-            }
-
-            $municipalities[] = [
-                'id' => $line[0],
-                'name' => $line[1],
-                'postal' => $line[4],
-            ];
-        }
-
-        $cacheItem->set($municipalities);
-        $cacheItem->expiresAfter(365 * 24 * 60 * 60);
-        $this->cache->save($cacheItem);
-
-        // return the result
-        return $municipalities;
-    }
-
-    /**
      * Returns an associative options array, depending on the form field configuration.
      */
     protected function getMunicipalityOptions(): array
     {
         // Get the municipalities
-        $municipalities = $this->getMunicipalities();
+        $municipalities = System::getContainer()->get(ContaoAustrianAdministrativeAreas::class)->getMunicipalities();
 
         // Create options
         $options = [];
 
         foreach ($municipalities as $municipality) {
             // Default
-            $value = $municipality['name'];
-            $label = $municipality['name'];
+            $value = $municipality['Gemeindename'];
+            $label = $municipality['Gemeindename'];
 
-            switch ($this->austrianMunicipalitiesSaveMode) {
-                case 'id': $value = $municipality['id']; break;
-                case 'postal': $value = $municipality['postal']; break;
+            switch ($this->austrianMunicipalitiesValue) {
+                case 'id': $value = $municipality['Gemeindekennziffer'];
+                    break;
+                case 'postal': $value = $municipality['PLZ des Gem.Amtes'];
+                    break;
             }
 
-            switch ($this->austrianMunicipalitiesDisplayMode) {
-                case 'name_id': $label = $municipality['name'].' ('.$municipality['id'].')'; break;
-                case 'name_postal': $label = $municipality['name'].' ('.$municipality['postal'].')'; break;
-                case 'id': $label = $municipality['id']; break;
-                case 'id_name': $label = $municipality['id'].' ('.$municipality['name'].')'; break;
-                case 'postal': $label = $municipality['postal']; break;
-                case 'postal_name': $label = $municipality['postal'].' ('.$municipality['name'].')'; break;
+            switch ($this->austrianMunicipalitiesLabel) {
+                case 'name_id': $label = $municipality['Gemeindename'].' ('.$municipality['Gemeindekennziffer'].')';
+                    break;
+                case 'name_postal': $label = $municipality['Gemeindename'].' ('.$municipality['PLZ des Gem.Amtes'].')';
+                    break;
+                case 'id': $label = $municipality['Gemeindekennziffer'];
+                    break;
+                case 'id_name': $label = $municipality['Gemeindekennziffer'].' ('.$municipality['Gemeindename'].')';
+                    break;
+                case 'postal': $label = $municipality['PLZ des Gem.Amtes'];
+                    break;
+                case 'postal_name': $label = $municipality['PLZ des Gem.Amtes'].' ('.$municipality['Gemeindename'].')';
+                    break;
             }
 
             $options[$value] = $label;

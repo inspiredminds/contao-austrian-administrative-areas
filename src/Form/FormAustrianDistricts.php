@@ -3,38 +3,36 @@
 declare(strict_types=1);
 
 /*
- * This file is part of the ContaoAustrianAdministrativeAreasBundle.
- *
- * (c) inspiredminds
- *
- * @license LGPL-3.0-or-later
+ * (c) INSPIRED MINDS
  */
 
-namespace InspiredMinds\ContaoAustrianAdministrativeAreasBundle\Form;
+namespace InspiredMinds\ContaoAustrianAdministrativeAreas\Form;
 
 use Contao\FormSelectMenu;
-use Contao\StringUtil;
 use Contao\System;
-use Symfony\Component\Cache\Adapter\FilesystemAdapter;
+use InspiredMinds\ContaoAustrianAdministrativeAreas\ContaoAustrianAdministrativeAreas;
 
 class FormAustrianDistricts extends FormSelectMenu
 {
-    protected const CACHE_NAME = 'contao.austriandistrictsform';
-
-    protected $cache;
-
     public function __construct($arrAttributes = null)
     {
         parent::__construct($arrAttributes);
 
-        $cacheDir = System::getContainer()->getParameter('kernel.cache_dir').'/contao';
-        $this->cache = new FilesystemAdapter('', 0, $cacheDir);
-
         // Include empty value
         $this->arrOptions[] = [['value' => '', 'label' => '']];
 
+        // Get the districts
+        $districts = System::getContainer()->get(ContaoAustrianAdministrativeAreas::class)->getDistricts();
+
+        // Group by "Bundesland"
+        $countries = [];
+
+        foreach ($districts as $district) {
+            $countries[$district['Bundesland']][] = $district;
+        }
+
         // Go through the districts
-        foreach ($this->getDistricts() as $country => $districts) {
+        foreach ($countries as $country => $districts) {
             $this->arrOptions[] = [
                 'group' => true,
                 'label' => $country,
@@ -43,8 +41,8 @@ class FormAustrianDistricts extends FormSelectMenu
 
             foreach ($districts as $district) {
                 $this->arrOptions[] = [
-                    'value' => StringUtil::generateAlias($country.'_'.$district),
-                    'label' => $district,
+                    'value' => $district['Politischer Bez. Code'],
+                    'label' => $district['Politischer Bezirk'],
                 ];
             }
         }
@@ -61,64 +59,5 @@ class FormAustrianDistricts extends FormSelectMenu
                 parent::__set($strKey, $varValue);
                 break;
         }
-    }
-
-    /**
-     * Returns the available districts as an array.
-     */
-    protected function getDistricts(): array
-    {
-        $cacheItem = $this->cache->getItem(self::CACHE_NAME);
-
-        if ($cacheItem->isHit()) {
-            return $cacheItem->get();
-        }
-
-        $districts = [];
-
-        // Load from server
-        $data = file('https://www.statistik.at/verzeichnis/reglisten/polbezirke.csv', FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
-
-        // process the data
-        for ($i = 3; $i < \count($data) - 1; ++$i) {
-            // get the line
-            $line = explode(';', utf8_encode($data[$i]));
-
-            // check the line
-            if (empty($line)) {
-                continue;
-            }
-
-            // get the country label
-            $country = $line[1];
-
-            // check the country label
-            if (!$country) {
-                continue;
-            }
-
-            // get the district label
-            $district = $line[3];
-
-            // check the district label
-            if (!$district) {
-                continue;
-            }
-
-            // check if we have country already
-            if (!isset($districts[$country])) {
-                $districts[$country] = [];
-            }
-
-            // add district
-            $districts[$country][] = $district;
-        }
-
-        $cacheItem->set($districts);
-        $cacheItem->expiresAfter(365 * 24 * 60 * 60);
-        $this->cache->save($cacheItem);
-
-        // return the result
-        return $districts;
     }
 }
