@@ -3,6 +3,8 @@ services:
         public: true
         arguments:
             - '@inspiredminds.contao_austrian_administrative_areas.cache'
+            - '@http_client'
+            - '@monolog.logger.contao.error'
             - '%env(AUSTRIAN_DISTRICT_CSV)%'
             - '%env(AUSTRIAN_MUNICIPALITIES_CSV)%'
 
